@@ -74,7 +74,7 @@ class Spot:  # the main class tht deals with drawing inside the window.
         if self.col < self.total_rows - 1 and not grid[self.row][self.col+1].is_barrier(): # RIGHT
             self.neighbours.append(grid[self.row][self.col+1])
 
-        if self.row > 0  and not grid[self.row][self.col - 1].is_barrier(): # LEFT
+        if self.col > 0  and not grid[self.row][self.col - 1].is_barrier(): # LEFT
             self.neighbours.append(grid[self.row][self.col - 1])
     def __lt__(self, other):
         return False
