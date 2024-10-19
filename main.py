@@ -169,6 +169,13 @@ def main(win, width):
 
                     algo(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
+def reconstruct_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.make_path()
+        draw()
+
+
 
 def algo(draw, grid, start, end):
     count = 0
@@ -191,7 +198,9 @@ def algo(draw, grid, start, end):
         open_set_hash.remove(current)
 
         if current == end:
-            return True  # Reached the end, path found
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            return True 
 
         for neighbour in current.neighbours:  # Corrected spelling of neighbours
             temp_g_score = g_score[current] + 1  # Increment g_score for the neighbour
@@ -212,7 +221,6 @@ def algo(draw, grid, start, end):
             current.make_closed()  # Visual representation of closed nodes
 
     return False  # No path found
-
 
 
 main(WIN, WIDTH)
