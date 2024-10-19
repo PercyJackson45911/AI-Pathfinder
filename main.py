@@ -182,5 +182,37 @@ def algo(draw, grid, start, end):
 
     open_set_hash = {start}
 
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        current = open_set.get()[2]  # learn heap sort algo
+        open_set_hash.remove(current)
+
+        if current == end:
+            return True  # Reached the end, path found
+
+        for neighbour in current.neighbours:  # Corrected spelling of neighbours
+            temp_g_score = g_score[current] + 1  # Increment g_score for the neighbour
+
+            if temp_g_score < g_score[neighbour]:  # If the new g_score is better, update
+                came_from[neighbour] = current
+                g_score[neighbour] = temp_g_score
+                f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())  # Add missing () to get_pos()
+                if neighbour not in open_set_hash:
+                    count += 1
+                    open_set.put((f_score[neighbour], count, neighbour))  # Add neighbour to the priority queue
+                    open_set_hash.add(neighbour)
+                    neighbour.make_open()  # Visual representation of open nodes
+
+        draw()  # Call the draw function to update the window
+
+        if current != start:
+            current.make_closed()  # Visual representation of closed nodes
+
+    return False  # No path found
+
+
 
 main(WIN, WIDTH)
