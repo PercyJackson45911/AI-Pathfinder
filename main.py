@@ -1,12 +1,9 @@
 #imports
 import pygame
-import math
 from queue import PriorityQueue
 
-from pygame.mixer import pause
-
 #display
-WIDTH = 800
+WIDTH = 1200
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('A* Route finding algorithm')
 
@@ -28,7 +25,7 @@ class Spot:  # the main class tht deals with drawing inside the window.
         self.col = col
         self.x = row * width
         self.y = col * width
-        self.colour = WHITE
+        self.colour = BLACK
         self.neighbours = []
         self.width = width
         self.total_rows = total_rows
@@ -48,18 +45,18 @@ class Spot:  # the main class tht deals with drawing inside the window.
         return self.colour == PURPLE
 
     def reset(self):
-        self.colour = WHITE
+        self.colour = BLACK
     def make_closed(self):
         self.colour = RED
     def make_open(self):
         self.colour = GREEN
-    def make_barrier(self):
-        self.colour = BLACK
+    def make_path(self):
+        self.colour = WHITE
     def make_end(self):
         self.colour = PURPLE
     def make_start(self):
         self.colour = ORANGE
-    def make_path(self):
+    def make_path_redraw(self):
         self.colour = TURQUOISE
     def draw(self, win):
         pygame.draw.rect(win, self.colour,(self.x, self.y, self.width,self.width))
@@ -74,7 +71,7 @@ class Spot:  # the main class tht deals with drawing inside the window.
         if self.col < self.total_rows - 1 and not grid[self.row][self.col+1].is_barrier(): # RIGHT
             self.neighbours.append(grid[self.row][self.col+1])
 
-        if self.col > 0  and not grid[self.row][self.col - 1].is_barrier(): # LEFT
+        if self.col > 0 and not  grid[self.row][self.col - 1].is_barrier(): # LEFT
             self.neighbours.append(grid[self.row][self.col - 1])
     def __lt__(self, other):
         return False
@@ -149,7 +146,7 @@ def main(win, width):
                     end.make_end()
 
                 elif spot != start and spot != end: # drawing the barriers
-                    spot.make_barrier()
+                    spot.make_path()
 
             elif pygame.mouse.get_pressed()[2]:
                 pos = pygame.mouse.get_pos()
@@ -172,7 +169,7 @@ def main(win, width):
 def reconstruct_path(came_from, current, draw):
     while current in came_from:
         current = came_from[current]
-        current.make_path()
+        current.make_path_redraw()
         draw()
 
 
@@ -200,7 +197,7 @@ def algo(draw, grid, start, end):
         if current == end:
             reconstruct_path(came_from, end, draw)
             end.make_end()
-            return True 
+            return True
 
         for neighbour in current.neighbours:  # Corrected spelling of neighbours
             temp_g_score = g_score[current] + 1  # Increment g_score for the neighbour
