@@ -1,9 +1,11 @@
 #imports
+from asyncio import LimitOverrunError
+
 import pygame
 from queue import PriorityQueue
 
 #display
-WIDTH = 1200
+WIDTH = 800
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('A* Route finding algorithm')
 
@@ -18,6 +20,12 @@ PURPLE = (128,0,128)
 ORANGE = (255,165,0)
 GREY = (128,128,128)
 TURQUOISE = (64,224, 208)
+BLUE = (0,0,255)
+NAVY_BLUE  = None
+BROWN = None
+BLUISH_TINGE_WHITE = None
+OLIVE_GREEN = None
+
 
 class Spot:  # the main class tht deals with drawing inside the window.
     def __init__(self, row, col, width, total_rows):
@@ -25,7 +33,7 @@ class Spot:  # the main class tht deals with drawing inside the window.
         self.col = col
         self.x = row * width
         self.y = col * width
-        self.colour = BLACK
+        self.colour = WHITE
         self.neighbours = []
         self.width = width
         self.total_rows = total_rows
@@ -38,26 +46,44 @@ class Spot:  # the main class tht deals with drawing inside the window.
     def is_open(self):
         return self.colour == GREEN
     def is_barrier(self):
-        return self.colour == BLACK
+        return self.colour == WHITE
     def is_start(self):
         return self.colour == ORANGE
     def is_end(self):
         return self.colour == PURPLE
+    def is_grassyroad(self):
+        return self.colour == OLIVE_GREEN
+    def is_highway(self):
+        return self.colour == BLACK
+    def is_mountainpass(self):
+        return self.colour == OLIVE_GREEN
+    def gravel_road(self):
+        return self.colour == GREY
+    def dirt_road(self):
+        return self.colour == BROWN
 
     def reset(self):
-        self.colour = BLACK
+        self.colour = WHITE
     def make_closed(self):
         self.colour = RED
     def make_open(self):
         self.colour = GREEN
-    def make_path(self):
-        self.colour = WHITE
+    def make_road(self):
+        self.colour = BLACK
+    def make_highway(self):
+        self.colour = BLUE
     def make_end(self):
         self.colour = PURPLE
     def make_start(self):
         self.colour = ORANGE
     def make_path_redraw(self):
         self.colour = TURQUOISE
+    def make_grassroad(self):
+        self.colour = OLIVE_GREEN
+    def make_mountainpass(self):
+        self.colour = NAVY_BLUE
+    def make_dirt_road(self):
+        self
     def draw(self, win):
         pygame.draw.rect(win, self.colour,(self.x, self.y, self.width,self.width))
     def update_neighbours(self, grid):
@@ -125,6 +151,9 @@ def main(win, width):
 
     run = True
     started = False
+    index =['start', 'road', 'highway', 'dirt road', 'mountain pass', 'gravel road', 'end']
+    index_counter = 0
+
     while run:
         draw(win,grid,ROWS, width)
         for event in pygame.event.get():
@@ -132,22 +161,25 @@ def main(win, width):
                 run = False
             if started:
                 continue
-            if pygame.mouse.get_pressed()[0]: # left button
-                pos = pygame.mouse.get_pos()
-                row, col = get_clicked(pos, ROWS, width)
-                spot = grid[row][col]
-                if not start and spot != end: # drawing the start point
-                    start = spot
-                    start.make_start()
+            if pygame.mouse.get_pressed()[1]:
+                if index_counter >= len(index):
+                    index_counter = 0
+                else:
+                    index_counter = index_counter+ 1
 
 
-                elif not end and spot != start: # drawing the end point
-                    end = spot
-                    end.make_end()
-
-                elif spot != start and spot != end: # drawing the barriers
-                    spot.make_path()
-
+            if pygame.mouse.get_pressed()[0]:
+                    pos = pygame.mouse.get_pos()
+                    row, col = get_clicked(pos, ROWS, width)
+                    spot = grid[row][col]
+                    if index[index_counter] == 'start' and not start and spot != end:
+                        start = spot
+                        spot.make_start()
+                    elif index[index_counter] == 'road' and spot != start:
+                        spot.make_road()
+                    elif index[index_counter] == 'end'and not end and spot != start:
+                        end = spot
+                        end.make_end()
             elif pygame.mouse.get_pressed()[2]:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked(pos, ROWS, width)
