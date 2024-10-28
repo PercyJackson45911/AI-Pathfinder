@@ -427,8 +427,8 @@ nine_am_fog= {
 }
 
 nine_am_snow= {
-    'road':80
-    'highway':75
+    'road':80,
+    'highway':75,
     'dirt':85,
     'mountain':99,
     'gravel':82
@@ -443,7 +443,7 @@ ten_am_clear= {
 }
 
 ten_am_drizzle= {
-    'road':60
+    'road':60,
     'highway':45,
     'dirt':80,
     'mountain':90,
@@ -492,7 +492,7 @@ eleven_am_drizzle= {
 
 eleven_am_storm= {
     'road':75,
-    'highway':70
+    'highway':70,
     'dirt':85,
     'mountain':95,
     'gravel':78
