@@ -1,12 +1,13 @@
-# imports
+ # imports
 
 import pygame
 from queue import PriorityQueue
+import pygame_gui
 
 # display
 WIDTH = 1200
 WIN = pygame.display.set_mode((1920, 1080),)
-pygame.display.set_caption('Advaith is eppy')
+pygame.display.set_caption('Everyone if fuckin eppy')
 
 # colours
 RED = (255, 0, 0)  # closed paths
@@ -32,7 +33,7 @@ road_weights = {
     "grass": 1.5,
     "gravel": 3.0}
 
-#weater system
+# weather system
 weather = ['clear', 'drizzle', 'storm', 'fog', 'snow']
 clear= {
     'road': 0,
@@ -50,30 +51,1284 @@ drizzle = {
     'gravel':1
 }
 storm = {
-    'road': 2,
-    'highway':1,
-    'dirt' : 5,
+    'road': 4,
+    'highway':2,
+    'dirt' : 8,
     'mountain': 9,
-    'gravel': 4
+    'gravel': 6
 }
 fog = {
     'road': 5,
-    'highway': 7,
-    'dirt' : 3,
+    'highway': 3,
+    'dirt' : 7,
     'mountain':10,
-    'gravel': 3
+    'gravel': 6
 }
 snow = {
-    'road': 3,
-    'highway': 1,
+    'road': 6,
+    'highway': 4,
     'dirt': 7,
     'mountain': 999999999999999999999999999999999999999999999999999999999,
     'gravel': 7
 }
-# index counters
+
+# traffic system
+
+one_am_clear = {
+    'road':0,
+    'highway':0,
+    'dirt':3,
+    'mountain': 2,
+    'gravel': 1
+}
+
+one_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':5,
+    'mountain':2,
+    'gravel':1
+}
+
+one_am_storm= {
+    'road':15,
+    'highway':10,
+    'dirt':22,
+    'mountain':35,
+    'gravel':20
+}
+
+one_am_fog= {
+    'road':25,
+    'highway':20,
+    'dirt':30,
+    'mountain':35,
+    'gravel':28
+}
+
+one_am_snow= {
+    'road':20,
+    'highway':20,
+    'dirt':18,
+    'mountain':25,
+    'gravel':18
+}
+
+two_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':3,
+    'mountain':2,
+    'gravel':1
+}
+
+two_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':5,
+    'mountain':2,
+    'gravel':1
+}
+
+two_am_storm= {
+    'road':15,
+    'highway':10,
+    'dirt':22,
+    'mountain':35,
+    'gravel':20
+}
+
+two_am_fog= {
+    'road':25,
+    'highway':20,
+    'dirt':30,
+    'mountain':35,
+    'gravel':28
+}
+
+two_am_snow= {
+    'road':20,
+    'highway':20,
+    'dirt':18,
+    'mountain':25,
+    'gravel':18
+}
+
+three_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':3,
+    'mountain':2,
+    'gravel':1
+}
+
+three_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':5,
+    'mountain':2,
+    'gravel':1
+}
+
+three_am_storm= {
+    'road':15,
+    'highway':10,
+    'dirt':22,
+    'mountain':35,
+    'gravel':20
+}
+
+three_am_fog= {
+    'road':25,
+    'highway':20,
+    'dirt':30,
+    'mountain':35,
+    'gravel':28
+}
+
+three_am_snow= {
+    'road':20,
+    'highway':20,
+    'dirt':18,
+    'mountain':25,
+    'gravel':18
+}
+
+four_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':3,
+    'mountain':2,
+    'gravel':1
+}
+
+four_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':5,
+    'mountain':2,
+    'gravel':1
+}
+
+four_am_storm= {
+    'road':15,
+    'highway':10,
+    'dirt':22,
+    'mountain':35,
+    'gravel':20
+}
+
+four_am_fog= {
+    'road':25,
+    'highway':20,
+    'dirt':30,
+    'mountain':35,
+    'gravel':28
+}
+
+four_am_snow= {
+    'road':20,
+    'highway':20,
+    'dirt':18,
+    'mountain':25,
+    'gravel':18
+}
+
+five_am_clear= {
+    'road':2,
+    'highway':1,
+    'dirt':3,
+    'mountain':2,
+    'gravel':2
+}
+
+five_am_drizzle= {
+    'road':2,
+    'highway':1,
+    'dirt':4,
+    'mountain':2,
+    'gravel':3
+}
+
+five_am_storm= {
+    'road':20,
+    'highway':15,
+    'dirt':28,
+    'mountain':40,
+    'gravel':22
+}
+
+five_am_fog= {
+    'road':35,
+    'highway':27,
+    'dirt':40,
+    'mountain':45,
+    'gravel':38
+}
+
+five_am_snow= {
+    'road':40,
+    'highway':33,
+    'dirt':45,
+    'mountain':55,
+    'gravel':43
+}
+
+six_am_clear= {
+    'road':2,
+    'highway':1,
+    'dirt':3,
+    'mountain':2,
+    'gravel':2
+}
+
+six_am_drizzle= {
+    'road':2,
+    'highway':1,
+    'dirt':4,
+    'mountain':2,
+    'gravel':3
+}
+
+six_am_storm= {
+    'road':20,
+    'highway':15,
+    'dirt':28,
+    'mountain':40,
+    'gravel':22
+}
+
+six_am_fog= {
+    'road':35,
+    'highway':27,
+    'dirt':40,
+    'mountain':0,
+    'gravel':0
+}
+
+six_am_snow= {
+    'road':40,
+    'highway':33,
+    'dirt':45,
+    'mountain':55,
+    'gravel':43
+}
+
+seven_am_clear= {
+    'road':10,
+    'highway':6,
+    'dirt':15,
+    'mountain':18,
+    'gravel':12
+}
+
+seven_am_drizzle= {
+    'road':10,
+    'highway':6,
+    'dirt':20,
+    'mountain':18,
+    'gravel':12
+}
+
+seven_am_storm= {
+    'road':30,
+    'highway':25,
+    'dirt':40,
+    'mountain':50,
+    'gravel':33
+}
+
+seven_am_fog= {
+    'road':45,
+    'highway':40,
+    'dirt':60,
+    'mountain':80,
+    'gravel':52
+}
+
+seven_am_snow= {
+    'road':50,
+    'highway':40,
+    'dirt':57,
+    'mountain':70,
+    'gravel':53
+}
+
+eight_am_clear= {
+    'road':10,
+    'highway':6,
+    'dirt':15,
+    'mountain':18,
+    'gravel':12
+}
+
+eight_am_drizzle= {
+    'road':10,
+    'highway':6,
+    'dirt':20,
+    'mountain':19,
+    'gravel':12
+}
+
+eight_am_storm= {
+    'road':30,
+    'highway':25,
+    'dirt':40,
+    'mountain':5,
+    'gravel':33
+}
+
+eight_am_fog= {
+    'road':45,
+    'highway':40,
+    'dirt':60,
+    'mountain':80,
+    'gravel':52
+}
+
+eight_am_snow= {
+    'road':50,
+    'highway':40,
+    'dirt':57,
+    'mountain':70,
+    'gravel':53
+}
+
+nine_am_clear= {
+    'road':60,
+    'highway':45,
+    'dirt':75,
+    'mountain':90,
+    'gravel':65
+}
+
+nine_am_drizzle= {
+    'road':60,
+    'highway':45,
+    'dirt':80,
+    'mountain':90,
+    'gravel':67
+}
+
+nine_am_storm= {
+    'road':85,
+    'highway':80,
+    'dirt':90,
+    'mountain':99,
+    'gravel':87
+}
+
+nine_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0
+}
+
+nine_am_snow= {
+    'road':80
+    'highway':75
+    'dirt':85,
+    'mountain':99,
+    'gravel':82
+}
+
+ten_am_clear= {
+    'road':60,
+    'highway':45,
+    'dirt':75,
+    'mountain':90,
+    'gravel':65
+}
+
+ten_am_drizzle= {
+    'road':60
+    'highway':45,
+    'dirt':80,
+    'mountain':90,
+    'gravel':67
+}
+
+ten_am_storm= {
+    'road':85,
+    'highway':80,
+    'dirt':90,
+    'mountain':99,
+    'gravel':87
+}
+
+ten_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+ten_am_snow= {
+    'road':80,
+    'highway':75,
+    'dirt':85,
+    'mountain':99,
+    'gravel':82,
+}
+
+eleven_am_clear= {
+    'road':50,
+    'highway':45,
+    'dirt':60,
+    'mountain':80,
+    'gravel':53
+}
+
+eleven_am_drizzle= {
+    'road':50,
+    'highway':45,
+    'dirt':60,
+    'mountain':80,
+    'gravel':55
+}
+
+eleven_am_storm= {
+    'road':75,
+    'highway':70
+    'dirt':85,
+    'mountain':95,
+    'gravel':78
+}
+
+eleven_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eleven_am_snow= {
+    'road':70,
+    'highway':65,
+    'dirt':80,
+    'mountain':95,
+    'gravel':73,
+}
+
+twelve_am_clear= {
+    'road':50,
+    'highway':45,
+    'dirt':60,
+    'mountain':80,
+    'gravel':54,
+}
+
+twelve_am_drizzle= {
+    'road':50,
+    'highway':45,
+    'dirt':60,
+    'mountain':80,
+    'gravel':56,
+}
+
+twelve_am_storm= {
+    'road':75,
+    'highway':70,
+    'dirt':85,
+    'mountain':95,
+    'gravel':78,
+}
+
+twelve_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twelve_am_snow= {
+    'road':70,
+    'highway':65,
+    'dirt':80,
+    'mountain':95,
+    'gravel':73,
+}
+
+thirteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+thirteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+thirteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+thirteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+thirteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fourteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fourteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fourteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fourteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fourteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fifteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fifteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fifteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fifteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+fifteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+sixteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+seventeen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+seventeen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+seventeen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+seventeen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+seventeen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eighteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eighteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eighteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eighteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+eighteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+nineteen_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+nineteen_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+nineteen_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+nineteen_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+nineteen_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_one_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_one_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_one_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_one_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_one_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_two_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_two_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_two_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_two_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_two_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_three_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_three_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_three_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_three_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_three_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_four_am_clear= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_four_am_drizzle= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_four_am_storm= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_four_am_fog= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+twenty_four_am_snow= {
+    'road':0,
+    'highway':0,
+    'dirt':0,
+    'mountain':0,
+    'gravel':0,
+}
+
+# random variable defo
 weather_index = 0
 current_weather = clear
+time_dict = twelve_am_clear
 road_type = 'road'
+index = ['start', 'road', 'highway', 'dirt road', 'mountain pass', 'gravel road', 'end']
+
+
+# time stuff
+time = 0
+time_input = input("Enter the time as digits of the hours")
+
+# clear weather
+if current_weather == 'clear':
+    if time_input == '00' or '12am':
+        time_dict = twelve_am_clear
+    elif time_input == '01' or '1am':
+        time_dict = one_am_clear
+    elif time_input == '02' or '2am':
+        time_dict = two_am_clear
+    elif time_input == '03' or '3am':
+        time_dict = three_am_clear
+    elif time_input == '04' or '4am':
+        time_dict = four_am_clear
+    elif time_input == '05' or '5am':
+        time_dict = five_am_clear
+    elif time_input == '06' or '6am':
+        time_dict = six_am_clear
+    elif time_input == '07' or '7am':
+        time_dict = seven_am_clear
+    elif time_input == '08' or '8am':
+        time_dict = eight_am_clear
+    elif time_input == '09' or '9am':
+        time_dict = nine_am_clear
+    elif time_input == '10' or '10am':
+        time_dict = ten_am_clear
+    elif time_input == '11' or '11am':
+        time_dict = eleven_am_clear
+    elif time_input == '12' or '12am':
+        time_input = twelve_am_clear
+    elif time_input == '13' or '13am':
+        time_input = thirteen_am_clear
+    elif time_input == '14' or '14am':
+        time_input = fourteen_am_clear
+    elif time_input == '15' or '15am':
+        time_input = fifteen_am_clear
+    elif time_input == '16' or '16am':
+        time_input = sixteen_am_clear
+    elif time_input == '17' or '17am':
+        time_input = seventeen_am_clear
+    elif time_input == '18' or '18am':
+        time_input = eighteen_am_clear
+    elif time_input == '19' or '19am':
+        time_input = nineteen_am_clear
+    elif time_input == '20' or '20am':
+        time_input = twenty_am_clear
+    elif time_input == '21' or '21am':
+        time_input = twenty_one_am_clear
+    elif time_input == '22' or '22am':
+        time_input = twenty_two_am_clear
+    elif time_input == '23' or '23am':
+        time_input = twenty_three_am_clear
+    elif time_input == '24' or '24am':
+        time_input = twenty_four_am_clear
+
+# drizzle weather
+if current_weather == 'drizzle':
+    if time_input == '00' or '12am':
+        time_dict = twelve_am_drizzle
+    elif time_input == '01' or '1am':
+        time_dict = one_am_drizzle
+    elif time_input == '02' or '2am':
+        time_dict = two_am_drizzle
+    elif time_input == '03' or '3am':
+        time_dict = three_am_drizzle
+    elif time_input == '04' or '4am':
+        time_dict = four_am_drizzle
+    elif time_input == '05' or '5am':
+        time_dict = five_am_drizzle
+    elif time_input == '06' or '6am':
+        time_dict = six_am_drizzle
+    elif time_input == '07' or '7am':
+        time_dict = seven_am_drizzle
+    elif time_input == '08' or '8am':
+        time_dict = eight_am_drizzle
+    elif time_input == '09' or '9am':
+        time_dict = nine_am_drizzle
+    elif time_input == '10' or '10am':
+        time_dict = ten_am_drizzle
+    elif time_input == '11' or '11am':
+        time_dict = eleven_am_drizzle
+    elif time_input == '12' or '12am':
+        time_input = twelve_am_drizzle
+    elif time_input == '13' or '13am':
+        time_input = thirteen_am_drizzle
+    elif time_input == '14' or '14am':
+        time_input = fourteen_am_drizzle
+    elif time_input == '15' or '15am':
+        time_input = fifteen_am_drizzle
+    elif time_input == '16' or '16am':
+        time_input = sixteen_am_drizzle
+    elif time_input == '17' or '17am':
+        time_input = seventeen_am_drizzle
+    elif time_input == '18' or '18am':
+        time_input = eighteen_am_drizzle
+    elif time_input == '19' or '19am':
+        time_input = nineteen_am_drizzle
+    elif time_input == '20' or '20am':
+        time_input = twenty_am_drizzle
+    elif time_input == '21' or '21am':
+        time_input = twenty_one_am_drizzle
+    elif time_input == '22' or '22am':
+        time_input = twenty_two_am_drizzle
+    elif time_input == '23' or '23am':
+        time_input = twenty_three_am_drizzle
+    elif time_input == '24' or '24am':
+        time_input = twenty_four_am_drizzle
+
+# storm weather
+if current_weather == 'storm':
+    if time_input == '00' or '12am':
+        time_dict = twelve_am_storm
+    elif time_input == '01' or '1am':
+        time_dict = one_am_storm
+    elif time_input == '02' or '2am':
+        time_dict = two_am_storm
+    elif time_input == '03' or '3am':
+        time_dict = three_am_storm
+    elif time_input == '04' or '4am':
+        time_dict = four_am_storm
+    elif time_input == '05' or '5am':
+        time_dict = five_am_storm
+    elif time_input == '06' or '6am':
+        time_dict = six_am_storm
+    elif time_input == '07' or '7am':
+        time_dict = seven_am_storm
+    elif time_input == '08' or '8am':
+        time_dict = eight_am_storm
+    elif time_input == '09' or '9am':
+        time_dict = nine_am_storm
+    elif time_input == '10' or '10am':
+        time_dict = ten_am_storm
+    elif time_input == '11' or '11am':
+        time_dict = eleven_am_storm
+    elif time_input == '12' or '12am':
+        time_input = twelve_am_storm
+    elif time_input == '13' or '13am':
+        time_input = thirteen_am_storm
+    elif time_input == '14' or '14am':
+        time_input = fourteen_am_storm
+    elif time_input == '15' or '15am':
+        time_input = fifteen_am_storm
+    elif time_input == '16' or '16am':
+        time_input = sixteen_am_storm
+    elif time_input == '17' or '17am':
+        time_input = seventeen_am_storm
+    elif time_input == '18' or '18am':
+        time_input = eighteen_am_storm
+    elif time_input == '19' or '19am':
+        time_input = nineteen_am_storm
+    elif time_input == '20' or '20am':
+        time_input = twenty_am_storm
+    elif time_input == '21' or '21am':
+        time_input = twenty_one_am_storm
+    elif time_input == '22' or '22am':
+        time_input = twenty_two_am_storm
+    elif time_input == '23' or '23am':
+        time_input = twenty_three_am_storm
+    elif time_input == '24' or '24am':
+        time_input = twenty_four_am_storm
+
+# fog weather
+if current_weather == 'fog':
+    if time_input == '00' or '12am':
+        time_dict = twelve_am_fog
+    elif time_input == '01' or '1am':
+        time_dict = one_am_fog
+    elif time_input == '02' or '2am':
+        time_dict = two_am_fog
+    elif time_input == '03' or '3am':
+        time_dict = three_am_fog
+    elif time_input == '04' or '4am':
+        time_dict = four_am_fog
+    elif time_input == '05' or '5am':
+        time_dict = five_am_fog
+    elif time_input == '06' or '6am':
+        time_dict = six_am_fog
+    elif time_input == '07' or '7am':
+        time_dict = seven_am_fog
+    elif time_input == '08' or '8am':
+        time_dict = eight_am_fog
+    elif time_input == '09' or '9am':
+        time_dict = nine_am_fog
+    elif time_input == '10' or '10am':
+        time_dict = ten_am_fog
+    elif time_input == '11' or '11am':
+        time_dict = eleven_am_fog
+    elif time_input == '12' or '12am':
+        time_input = twelve_am_fog
+    elif time_input == '13' or '13am':
+        time_input = thirteen_am_fog
+    elif time_input == '14' or '14am':
+        time_input = fourteen_am_fog
+    elif time_input == '15' or '15am':
+        time_input = fifteen_am_fog
+    elif time_input == '16' or '16am':
+        time_input = sixteen_am_fog
+    elif time_input == '17' or '17am':
+        time_input = seventeen_am_fog
+    elif time_input == '18' or '18am':
+        time_input = eighteen_am_fog
+    elif time_input == '19' or '19am':
+        time_input = nineteen_am_fog
+    elif time_input == '20' or '20am':
+        time_input = twenty_am_fog
+    elif time_input == '21' or '21am':
+        time_input = twenty_one_am_fog
+    elif time_input == '22' or '22am':
+        time_input = twenty_two_am_fog
+    elif time_input == '23' or '23am':
+        time_input = twenty_three_am_fog
+    elif time_input == '24' or '24am':
+        time_input = twenty_four_am_fog
+
+# snow weather
+if current_weather == 'snow':
+    if time_input == '00' or '12am':
+        time_dict = twelve_am_snow
+    elif time_input == '01' or '1am':
+        time_dict = one_am_snow
+    elif time_input == '02' or '2am':
+        time_dict = two_am_snow
+    elif time_input == '03' or '3am':
+        time_dict = three_am_snow
+    elif time_input == '04' or '4am':
+        time_dict = four_am_snow
+    elif time_input == '05' or '5am':
+        time_dict = five_am_snow
+    elif time_input == '06' or '6am':
+        time_dict = six_am_snow
+    elif time_input == '07' or '7am':
+        time_dict = seven_am_snow
+    elif time_input == '08' or '8am':
+        time_dict = eight_am_snow
+    elif time_input == '09' or '9am':
+        time_dict = nine_am_snow
+    elif time_input == '10' or '10am':
+        time_dict = ten_am_snow
+    elif time_input == '11' or '11am':
+        time_dict = eleven_am_snow
+    elif time_input == '12' or '12am':
+        time_input = twelve_am_snow
+    elif time_input == '13' or '13am':
+        time_input = thirteen_am_snow
+    elif time_input == '14' or '14am':
+        time_input = fourteen_am_snow
+    elif time_input == '15' or '15am':
+        time_input = fifteen_am_snow
+    elif time_input == '16' or '16am':
+        time_input = sixteen_am_snow
+    elif time_input == '17' or '17am':
+        time_input = seventeen_am_snow
+    elif time_input == '18' or '18am':
+        time_input = eighteen_am_snow
+    elif time_input == '19' or '19am':
+        time_input = nineteen_am_snow
+    elif time_input == '20' or '20am':
+        time_input = twenty_am_snow
+    elif time_input == '21' or '21am':
+        time_input = twenty_one_am_snow
+    elif time_input == '22' or '22am':
+        time_input = twenty_two_am_snow
+    elif time_input == '23' or '23am':
+        time_input = twenty_three_am_snow
+    elif time_input == '24' or '24am':
+        time_input = twenty_four_am_snow
+
+# drop down menu
+manager = pygame_gui.UIManager((200,200))
+dropdown_menu = pygame.gui.element.UIDropDownMenu(
+    options_list = index,
+    starting_option = 'Road Type',
+    reletive_rect = pygame.rect((350, 275), (200, 30)),
+    manager = manager
+)
+
+
 
 class Spot:  # the main class tht deals with drawing inside the window.
     def __init__(self, row, col, width, total_rows, road_type):
@@ -104,9 +1359,6 @@ class Spot:  # the main class tht deals with drawing inside the window.
 
     def is_end(self):
         return self.colour == PURPLE
-
-    def is_grassyroad(self):
-        return self.colour == OLIVE_GREEN
 
     def is_highway(self):
         return self.colour == BLACK
@@ -146,10 +1398,6 @@ class Spot:  # the main class tht deals with drawing inside the window.
     def make_path_redraw(self):
         self.colour = TURQUOISE
 
-    def make_grassroad(self):
-        self.colour = OLIVE_GREEN
-        self.road_type = 'grass'
-
     def make_mountainpass(self):
         self.colour = NAVY_BLUE
         self.road_type = 'mountain'
@@ -187,7 +1435,7 @@ def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     distance = abs(x1 - x2) + abs(y1 - y2)
-    return distance * road_weights[road_type] * current_weather[road_type]
+    return distance * road_weights[road_type] * current_weather[road_type] * time_dict[road_type]
 
 def make_grid(rows, width):
     grid = []
@@ -238,8 +1486,8 @@ def main(win, width):
 
     run = True
     started = False
-    index = ['start', 'road', 'highway', 'dirt road', 'mountain pass', 'gravel road', 'grass road', 'end']
     index_counter = 0
+
     while run:
         draw(win, grid, ROWS, width)
         for event in pygame.event.get():
@@ -271,8 +1519,6 @@ def main(win, width):
                     spot.make_mountainpass()
                 elif index[index_counter] == 'gravel road':
                     spot.make_gravel_road()
-                elif index[index_counter] == 'grass road':
-                    spot.make_grassroad()
                 elif index[index_counter] == 'end' and not end and spot != start:
                     end = spot
                     end.make_end()
@@ -291,8 +1537,7 @@ def main(win, width):
                     for row in grid:
                         for spot in row:
                             spot.update_neighbours(grid)
-                    algo(lambda: draw(win, grid, ROWS, width), grid, start, end, current_weather
-                         )
+                    algo(lambda: draw(win, grid, ROWS, width), grid, start, end, current_weather = clear)
 
                 elif event.key == pygame.K_w:
                     if weather_index >= len(weather) -1:
@@ -309,7 +1554,10 @@ def main(win, width):
                         current_weather = fog
                     elif weather[weather_index] == 'snow':
                         current_weather = snow
-                    print(current_weather)
+
+            if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+                if event.ui_element == dropdown_menu:
+                    print("Selected option:", event.text)
 
 def reconstruct_path(came_from, current, draw):
     while current in came_from:
@@ -345,8 +1593,9 @@ def algo(draw, grid, start, end, current_weather):  # Added current_weather as a
         for neighbour in current.neighbours:
             road_weight = road_weights.get(neighbour.road_type, 1.0)
             weather_penalty = current_weather.get(neighbour.road_type, 1)  # Using current_weather here
-            print(f"Weather: {weather_index}, Weather Penalty: {weather_penalty}")
-            temp_g_score = g_score[current] + road_weight + weather_penalty
+            time_penalty = time_dict.get(neighbour.road_type, 1)
+            temp_g_score = g_score[current] + road_weight + weather_penalty + time_penalty
+            print(time_dict)
         
 
             if temp_g_score < g_score[neighbour]:
@@ -365,7 +1614,6 @@ def algo(draw, grid, start, end, current_weather):  # Added current_weather as a
             current.make_closed()
 
     return False
-
 
 
 main(WIN, WIDTH)
